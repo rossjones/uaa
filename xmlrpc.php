@@ -25,7 +25,8 @@ switch($xml->methodName)
 		$obj->pass = (string)$xml->params->param[2]->value->string;
 
         // Update the local date-time in a file somewhere
-        $now = new DateTime(null, new DateTimeZone('Europe/London'));
+        date_default_timezone_set("UTC");
+        $now = new DateTime(null, new DateTimeZone('UTC'));
         file_put_contents("/tmp/last_update.txt", $now->format('c'));
 
         success('<string>200</string>');

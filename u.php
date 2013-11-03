@@ -1,3 +1,29 @@
+<?php
+ini_set('display_errors',1);
+
+  require "db.php";
+  if( $_COOKIE["uaa_login"] == "" ){
+    header('Location: http://127.0.0.1/');
+    exit;
+  };
+  $q = "SELECT * FROM settings WHERE id='" . $_COOKIE["uaa_login"] . "';";
+  $userdetails = db_query($q);
+
+date_default_timezone_set("UTC");
+$date = file_get_contents("/tmp/last_update.txt");
+//$seconds = strtotime($date);
+  $last = new DateTime($date, new DateTimeZone('UTC'));
+  $now = new DateTime(NULL, new DateTimeZone('UTC'));
+  // hack
+
+  $diff = $last->diff($now);
+  print_r($diff);
+  print_r($last);
+  print_r($now);
+  
+  //$last = new DateTime(); //create dateTime object
+  //$last->setTimezone(new DateTimeZone('Europe/London'));
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +78,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Wai2k <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><? print($userdetails["username"]);?> <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/u.php">My settings</a></li>
                 <li><a href="/">Logout</a></li>
@@ -207,18 +233,18 @@
               <form class="form form-inline">
                 <div class="control-group">
                   Email me at
-                  <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" style="width:50%;">
+                  <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" style="width:50%;" value="<?  print($userdetails['email']); ?>">
                 </div>
 
                 <div class="control-group" style="margin-top:10px;">
                   Send me a text message at
-                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter phone number" style="width:50%;"> 
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter phone number" style="width:50%;" value="<?  print($userdetails['phone']); ?>"> 
                 </div>
 
 
                 <div class="control-group" style="margin-top:10px;">
                   If there is no motion for 
-                  <input type="text" class="form-control" id="exampleInputEmail1"  style="width:40px;"> hours and  <input type="text" class="form-control" id="exampleInputEmail1" style="width:40px;"> minutes
+                  <input type="text" class="form-control" id="exampleInputEmail1"  style="width:40px;" value="<?  print($userdetails['alert_hours']); ?>"> hours and  <input type="text" class="form-control" id="exampleInputEmail1" style="width:40px;" value="<?  print($userdetails['alert_minutes']); ?>"> minutes
                 </div>                
               </form>
           </div>
